@@ -57,6 +57,8 @@ set guifont=Hack:h10.2:cANSI
 set guicursor+=a:blinkon0							" disable cursor blink
 set guioptions-=T									" no tool bar
 set guioptions-=m									" no menu bar
+set guioptions-=r									" no right-hand scroll bar
+set guioptions-=L	  								" no left-hand scroll bar
 
 " Default right margins at 80 and 110 characters
 let &colorcolumn="80,".join(range(110, 999), ",")
