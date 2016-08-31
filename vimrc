@@ -1,4 +1,5 @@
 execute pathogen#infect()
+Helptags
 
 set backspace=indent,eol,start						" allow backspacing over everything in insert mode
 set history=50										" keep 50 lines of command line history
@@ -25,17 +26,34 @@ set errorformat^=%-GIn\ file\ included\ from\ %f:%l:%c:,%-GIn\ file
 "==============================================================================
 syntax on											" enable source formatting
 
-colorscheme desert
+"---
+" desert
+"colorscheme desert
+"highlight LineNr guifg=grey40 ctermfg=darkgrey
+"highlight ColorColumn guibg=grey25 ctermbg=darkgrey
+"highlight csClass guifg=Khaki
+"highlight csIface guifg=Khaki 
 
-highlight LineNr guifg=grey40 ctermfg=darkgrey
-highlight ColorColumn guibg=grey25 ctermbg=darkgrey
-highlight csClass guifg=Khaki
-highlight csIface guifg=Khaki 
+"---
+" codeschool
+colorscheme codeschool
+let g:airline_theme='base16_codeschool'
+highlight SignColumn guibg=#2a343a
+highlight SignifySignAdd guifg=#43820d guibg=#2a343a gui=bold
+highlight SignifySignDelete guifg=#880708 guibg=#2a343a
+highlight SignifySignChange guifg=#3c98d9 guibg=#2a343a
+"---
+
+"colorscheme solarized
+"colorscheme gruvbox
+"colorscheme mustang
+"set background=dark
 
 set number											" show line numbers
 set listchars=tab:▸\ ,eol:¬
 set hlsearch										" highlight search pattern
-set guifont=Consolas:h11:cANSI
+"set guifont=Consolas:h11:cANSI
+set guifont=Hack:h10.2:cANSI
 set guicursor+=a:blinkon0							" disable cursor blink
 set guioptions-=T									" no tool bar
 set guioptions-=m									" no menu bar
@@ -47,11 +65,44 @@ let &colorcolumn="80,".join(range(110, 999), ",")
 autocmd BufEnter *.sql let &colorcolumn="37,80,".join(range(110, 999), ",")
 autocmd BufLeave *.sql let &colorcolumn="80,".join(range(110, 999), ",")
 
-" Display status bar, with file encoding 
+" Status bar
 set laststatus=2
-if has("statusline")
- set statusline=%<%f\ %h%m%r%=%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}%k\ %-14.(%l,%c%V%)\ %P
+
+"==============================================================================
+" Plugins
+"==============================================================================
+" signify
+let g:signify_vcs_list = [ 'git', 'svn' ]
+let g:signify_sign_add = '+'
+let g:signify_sign_delete = '-'
+let g:signify_sign_change = '~'
+" airline
+if !exists('g:airline_symbols')
+	let g:airline_symbols = {}
 endif
+let g:airline_symbols.maxlinenr = ''
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline#extensions#hunks#enabled = 1
+let g:airline#extensions#hunks#hunk_symbols = ['+', '~', '-']
+let g:airline#extensions#branch#use_vcscommand = 1
+
+let g:airline#extensions#branch#format = 'FormatBranchName'
+function! FormatBranchName(name)
+	let name = a:name
+
+	" When using the vcscommand svn plugin the name is the revision number, which is kind of useless. 
+	" Instead, try to parse the branch name out of svn info. This requires some assumptions about the 
+	" structure of the repository.
+	if b:VCSCommandVCSType == 'SVN'
+		let fileName = bufname(VCSCommandGetOriginalBuffer(bufnr('%')))
+		let infoText = system('svn info --non-interactive -- "' . fileName . '"')
+		let match = matchlist(infoText, '\(\n\|^\)Relative URL: \^\/\(\(\(project\|branch\(es\)?\|tags?\)\/[^/$]*\|trunk\|master\)\)')
+		let name = get(match, 2, name)
+	endif
+
+	return name 
+endfunction
 
 "==============================================================================
 " Shortcuts
