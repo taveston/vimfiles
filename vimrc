@@ -1,6 +1,11 @@
 execute pathogen#infect()
 Helptags
 
+"==============================================================================
+" Editor
+"==============================================================================
+filetype plugin on
+set autoindent
 set backspace=indent,eol,start						" allow backspacing over everything in insert mode
 set history=50										" keep 50 lines of command line history
 set ruler											" show the cursor position all the time
@@ -84,13 +89,25 @@ autocmd BufLeave *.sql let &colorcolumn="80,".join(range(110, 999), ",")
 set laststatus=2
 
 "==============================================================================
-" Editor
-"==============================================================================
-set autoindent
-
-"==============================================================================
 " Plugins
 "==============================================================================
+" omnisharp/syntastic
+let g:syntastic_cs_checkers = ['syntax', 'semantic'] ", 'issues']
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
+
+" Automatically add new cs files to the nearest project on save
+autocmd BufWritePost *.cs call OmniSharp#AddToProject()
+
+" show type information automatically when the cursor stops moving
+autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
+
 " signify
 let g:signify_vcs_list = [ 'git', 'svn' ]
 let g:signify_sign_add = '+'
