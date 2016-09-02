@@ -8,8 +8,8 @@ set showcmd											" display incomplete commands
 set incsearch										" do incremental searching
 set backup											" keep a backup file
 set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
-set dir=$TEMP,$TMP,.
-set backupdir=$TEMP,$TMP,.
+set dir=$TEMP//,$TMP//,.
+set backupdir=$TEMP//,$TMP//,.
 set encoding=utf-8
 set grepprg=grep\ -nH								" asume grep exists
 set lines=35 columns=120
@@ -33,21 +33,33 @@ syntax on											" enable source formatting
 "highlight ColorColumn guibg=grey25 ctermbg=darkgrey
 "highlight csClass guifg=Khaki
 "highlight csIface guifg=Khaki 
-
+"highlight SignColumn guibg=gray25
 "---
 " codeschool
-colorscheme codeschool
-let g:airline_theme='base16_codeschool'
-highlight SignColumn guibg=#2a343a
-highlight SignifySignAdd guifg=#43820d guibg=#2a343a gui=bold
-highlight SignifySignDelete guifg=#880708 guibg=#2a343a
-highlight SignifySignChange guifg=#3c98d9 guibg=#2a343a
+"colorscheme codeschool
+"let g:airline_theme='base16_codeschool'
+"highlight SignColumn guibg=#2a343a
+"highlight SignifySignAdd guifg=#43820d guibg=#2a343a gui=bold
+"highlight SignifySignDelete guifg=#880708 guibg=#2a343a
+"highlight SignifySignChange guifg=#3c98d9 guibg=#2a343a
 "---
-
+" solarized light
+"set background=light
 "colorscheme solarized
-"colorscheme gruvbox
-"colorscheme mustang
+"---
+" solarized dark
 "set background=dark
+"colorscheme solarized
+"highlight SignColumn guibg=#073642
+"---
+" base16-ateliersavanna
+"set background=dark
+"colorscheme base16-ateliersavanna
+"---
+" gruvbox 
+let g:gruvbox_vert_split = 'fg4'					" get rid of pipe chars
+colorscheme gruvbox
+"---
 
 set number											" show line numbers
 set listchars=tab:▸\ ,eol:¬
@@ -59,6 +71,7 @@ set guioptions-=T									" no tool bar
 set guioptions-=m									" no menu bar
 set guioptions-=r									" no right-hand scroll bar
 set guioptions-=L	  								" no left-hand scroll bar
+set guioptions+=c	  								" no popups
 
 " Default right margins at 80 and 110 characters
 let &colorcolumn="80,".join(range(110, 999), ",")
@@ -71,6 +84,11 @@ autocmd BufLeave *.sql let &colorcolumn="80,".join(range(110, 999), ",")
 set laststatus=2
 
 "==============================================================================
+" Editor
+"==============================================================================
+set autoindent
+
+"==============================================================================
 " Plugins
 "==============================================================================
 " signify
@@ -78,6 +96,8 @@ let g:signify_vcs_list = [ 'git', 'svn' ]
 let g:signify_sign_add = '+'
 let g:signify_sign_delete = '-'
 let g:signify_sign_change = '~'
+" conque term
+let g:ConqueTerm_CloseOnEnd = 1
 " airline
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
@@ -99,7 +119,7 @@ function! FormatBranchName(name)
 	" When using the vcscommand svn plugin the name is the revision number, which is kind of useless. 
 	" Instead, try to parse the branch name out of svn info. This requires some assumptions about the 
 	" structure of the repository.
-	if b:VCSCommandVCSType == 'SVN'
+	if exists('b:VCSCommandVCSType') && b:VCSCommandVCSType == 'SVN'
 		let fileName = bufname(VCSCommandGetOriginalBuffer(bufnr('%')))
 		let infoText = system('svn info --non-interactive -- "' . fileName . '"')
 		let match = matchlist(infoText, '\(\n\|^\)Relative URL: \^\/\(\(\(project\|branch\(es\)?\|tags?\)\/[^/$]*\|trunk\|master\)\)')
@@ -124,7 +144,7 @@ noremap <leader>s :nohlsearch<return>
 nnoremap <leader>w :set list!<CR>
 
 " Toggle spell-check
-nnoremap <leader>c :setlocal spell! spelllang=en_gb<CR>
+nnoremap <leader>k :setlocal spell! spelllang=en_gb<CR>
 
 " Sets SQL case according to CR360 conventions
 nnoremap <leader>q~ :call CapitaliseSQL()<return>
