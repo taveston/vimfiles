@@ -25,3 +25,6 @@
 [submodule "bundle/syntastic"]
 	path = bundle/syntastic
 	url = https://github.com/scrooloose/syntastic.git
+[submodule "bundle/devicons"]
+	path = bundle/devicons
+	url = https://github.com/ryanoasis/vim-devicons.git
