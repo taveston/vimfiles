@@ -70,7 +70,8 @@ set number											" show line numbers
 set listchars=tab:▸\ ,eol:¬
 set hlsearch										" highlight search pattern
 "set guifont=Consolas:h11:cANSI
-set guifont=Hack:h10.2:cANSI
+"set guifont=Hack:h10.2:cANSI
+set guifont=DejaVuSansMonoForPowerline_NF:h11:cANSI
 set guicursor+=a:blinkon0							" disable cursor blink
 set guioptions-=T									" no tool bar
 set guioptions-=m									" no menu bar
@@ -164,7 +165,8 @@ nnoremap <leader>w :set list!<CR>
 nnoremap <leader>k :setlocal spell! spelllang=en_gb<CR>
 
 " Sets SQL case according to CR360 conventions
-nnoremap <leader>q~ :call CapitaliseSQL()<return>
+nnoremap <leader>q~ :%call CapitaliseSQL()<return>
+vnoremap <leader>q~ :call CapitaliseSQL()<return>
 
 " Open Windows exporer in file directory
 nnoremap <leader>x :!start explorer %:p:h<return>
@@ -174,6 +176,6 @@ map <leader>t :NERDTreeToggle<CR>
 "==============================================================================
 " Utilities
 "==============================================================================
-function! CapitaliseSQL()
- %s/\<\w\+\>/\=synIDattr(synID(line('.'),col('.'),1),'name')=~?'sql\%(keyword\|operator\|statement\)'?toupper(submatch(0)):submatch(0)/ge
+function! CapitaliseSQL() 
+ .s/\<\w\+\>/\=synIDattr(synID(line('.'),col('.'),1),'name')=~?'sql\%(keyword\|operator\|statement\)'?toupper(submatch(0)):submatch(0)/ge
 endfunction
