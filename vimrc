@@ -4,22 +4,24 @@ Helptags
 "==============================================================================
 " Editor
 "==============================================================================
-filetype plugin on
+filetype plugin indent on
+
+set dir=$TEMP//,$TMP//,.
+set backupdir=$TEMP//,$TMP//,.
+set path=.,,**
+
 set autoindent
 set backspace=indent,eol,start						" allow backspacing over everything in insert mode
 set history=50										" keep 50 lines of command line history
 set ruler											" show the cursor position all the time
-set showcmd											" display incomplete commands
 set incsearch										" do incremental searching
 set backup											" keep a backup file
 set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
-set dir=$TEMP//,$TMP//,.
-set backupdir=$TEMP//,$TMP//,.
 set encoding=utf-8
 set grepprg=grep\ -nH								" asume grep exists
-set lines=35 columns=120
-set path=.,,**
-let g:netrw_liststyle=3
+set scrolloff=5
+set gdefault										" substitute has /g by default
+set nofoldenable									" disable folding
 
 " Parse g++ errors better
 set errorformat^=%-GIn\ file\ included\ from\ %f:%l:%c:,%-GIn\ file
@@ -31,67 +33,61 @@ set errorformat^=%-GIn\ file\ included\ from\ %f:%l:%c:,%-GIn\ file
 "==============================================================================
 syntax on											" enable source formatting
 
-"---
-" desert
-"colorscheme desert
-"highlight LineNr guifg=grey40 ctermfg=darkgrey
-"highlight ColorColumn guibg=grey25 ctermbg=darkgrey
-"highlight csClass guifg=Khaki
-"highlight csIface guifg=Khaki 
-"highlight SignColumn guibg=gray25
-"---
-" codeschool
-"colorscheme codeschool
-"let g:airline_theme='base16_codeschool'
-"highlight SignColumn guibg=#2a343a
-"highlight SignifySignAdd guifg=#43820d guibg=#2a343a gui=bold
-"highlight SignifySignDelete guifg=#880708 guibg=#2a343a
-"highlight SignifySignChange guifg=#3c98d9 guibg=#2a343a
-"---
-" solarized light
-"set background=light
-"colorscheme solarized
-"---
-" solarized dark
-"set background=dark
-"colorscheme solarized
-"highlight SignColumn guibg=#073642
-"---
-" base16-ateliersavanna
-"set background=dark
-"colorscheme base16-ateliersavanna
-"---
-" gruvbox 
-let g:gruvbox_vert_split = 'fg4'					" get rid of pipe chars
+let g:gruvbox_italic = 0							" italics are sometimes glitchy
 colorscheme gruvbox
-"---
 
 set number											" show line numbers
-set listchars=tab:▸\ ,eol:¬
+set relativenumber									" line numbers are relative 
+set cursorline										" highlight cursor line
 set hlsearch										" highlight search pattern
-"set guifont=Consolas:h11:cANSI
-"set guifont=Hack:h10.2:cANSI
-set guifont=DejaVuSansMonoForPowerline_NF:h11:cANSI
-set guicursor+=a:blinkon0							" disable cursor blink
-set guioptions-=T									" no tool bar
-set guioptions-=m									" no menu bar
-set guioptions-=r									" no right-hand scroll bar
-set guioptions-=L	  								" no left-hand scroll bar
-set guioptions+=c	  								" no popups
+set laststatus=2									" show status bar
+set noshowmode										" don't display mode (redundant with airline)
+set showcmd											" display incomplete commands
 
-" Default right margins at 80 and 110 characters
-let &colorcolumn="80,".join(range(110, 999), ",")
+if has('gui_running')
+	set lines=35 columns=120
 
-" Extra guidelines for SQL files
-autocmd BufEnter *.sql let &colorcolumn="37,80,".join(range(110, 999), ",")
-autocmd BufLeave *.sql let &colorcolumn="80,".join(range(110, 999), ",")
+	set listchars=tab:→\ ,eol:↵,trail:∙
+	set fillchars=vert:┆
 
-" Status bar
-set laststatus=2
+	" Font
+	set guifont=DejaVuSansMonoForPowerline_NF:h11:cANSI,Consolas:h11:cANSI
+
+	" Doesn't seem to be a way of detecting if the fallback font is being
+	" used, and try-catch wierdly doesn't seem to work in the vimrc, just have
+	" to asume we have a powerline font for now
+	let has_powerline_font = 1
+
+	" GUI options
+	set guicursor+=a:blinkon0						" disable cursor blink
+	set guioptions-=T								" no tool bar
+	set guioptions-=m								" no menu bar
+	set guioptions-=r								" no right-hand scroll bar
+	set guioptions-=L	  							" no left-hand scroll bar
+	set guioptions+=c	  							" no popups
+
+	" Default right margins at 80 and 100 characters
+	let &colorcolumn="80,".join(range(100, 999), ",")
+
+	" Extra guidelines for SQL files
+	autocmd BufEnter *.sql let &colorcolumn="37,80,".join(range(100, 999), ",")
+	autocmd BufLeave *.sql let &colorcolumn="80,".join(range(100, 999), ",")
+else
+	set listchars=tab:>\ ,eol:$
+	set fillchars=vert:|
+
+	let has_powerline_font = 0
+endif
 
 "==============================================================================
 " Plugins
 "==============================================================================
+" startify
+let g:startify_bookmarks = [ '\cvs', '\cvs\csr\db', '~\vimfiles\vimrc', '~\Documents\repos' ]
+let g:startify_custom_header = []
+let g:startify_relative_path = 1
+let g:startify_change_to_dir = 1
+
 " omnisharp/syntastic
 let g:syntastic_cs_checkers = ['syntax', 'semantic'] ", 'issues']
 let g:syntastic_always_populate_loc_list = 1
@@ -114,14 +110,20 @@ let g:signify_vcs_list = [ 'git', 'svn' ]
 let g:signify_sign_add = '+'
 let g:signify_sign_delete = '-'
 let g:signify_sign_change = '~'
+
 " conque term
 let g:ConqueTerm_CloseOnEnd = 1
+
+" devicons
+let g:webdevicons_enable = has_powerline_font
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
+
 " airline
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
 endif
 let g:airline_symbols.maxlinenr = ''
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = has_powerline_font
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#tab_nr_type = 2 " splits and tab number
@@ -129,8 +131,8 @@ let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#hunks#hunk_symbols = ['+', '~', '-']
 let g:airline#extensions#branch#use_vcscommand = 1
-
 let g:airline#extensions#branch#format = 'FormatBranchName'
+
 function! FormatBranchName(name)
 	let name = a:name
 
