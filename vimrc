@@ -27,6 +27,10 @@ set nofoldenable									" disable folding
 set errorformat^=%-GIn\ file\ included\ from\ %f:%l:%c:,%-GIn\ file
        \\ included\ from\ %f:%l:%c\\,,%-GIn\ file\ included\ from\ %f
        \:%l:%c,%-GIn\ file\ included\ from\ %f:%l
+	
+let &colorcolumn="100"
+autocmd BufEnter *.sql let &colorcolumn="37,100"
+autocmd BufLeave *.sql let &colorcolumn="100"
 
 "==============================================================================
 " Visuals
@@ -51,7 +55,7 @@ if has('gui_running')
 	set fillchars=vert:┆
 
 	" Font
-	set guifont=DejaVuSansMonoForPowerline_NF:h11:cANSI,Consolas:h11:cANSI
+	set guifont=DejaVuSansMonoForPowerline_NF:h10.5:cANSI,Consolas:h11:cANSI
 
 	" Doesn't seem to be a way of detecting if the fallback font is being
 	" used, and try-catch wierdly doesn't seem to work in the vimrc, just have
@@ -67,11 +71,11 @@ if has('gui_running')
 	set guioptions+=c	  							" no popups
 
 	" Default right margins at 80 and 100 characters
-	let &colorcolumn="80,".join(range(100, 999), ",")
+	"let &colorcolumn="80,".join(range(100, 999), ",")
 
 	" Extra guidelines for SQL files
-	autocmd BufEnter *.sql let &colorcolumn="37,80,".join(range(100, 999), ",")
-	autocmd BufLeave *.sql let &colorcolumn="80,".join(range(100, 999), ",")
+	" autocmd BufEnter *.sql let &colorcolumn="37,80,".join(range(100, 999), ",")
+	" autocmd BufLeave *.sql let &colorcolumn="80,".join(range(100, 999), ",")
 else
 	set listchars=tab:>\ ,eol:$
 	set fillchars=vert:|
@@ -82,8 +86,12 @@ endif
 "==============================================================================
 " Plugins
 "==============================================================================
+
+" wimproved
+autocmd GUIEnter * silent! WToggleClean
+
 " startify
-let g:startify_bookmarks = [ '\cvs', '\cvs\csr\db', '~\vimfiles\vimrc', '~\Documents\repos' ]
+let g:startify_bookmarks = [ '\cvs', '\cvs\csr\db', '~\vimfiles\vimrc', '~\documents\repos' ]
 let g:startify_custom_header = []
 let g:startify_relative_path = 1
 let g:startify_change_to_dir = 1
@@ -91,9 +99,10 @@ let g:startify_change_to_dir = 1
 " omnisharp/syntastic
 let g:syntastic_cs_checkers = ['syntax', 'semantic'] ", 'issues']
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_cpp_compiler_options = '-std=c++14' 
 
 autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
@@ -161,10 +170,10 @@ inoremap jk <esc>
 noremap <leader>s :nohlsearch<return>
 
 " Display whitespace
-nnoremap <leader>w :set list!<CR>
+nnoremap <leader>w :set list!<return>
 
 " Toggle spell-check
-nnoremap <leader>k :setlocal spell! spelllang=en_gb<CR>
+nnoremap <leader>k :setlocal spell! spelllang=en_gb<return>
 
 " Sets SQL case according to CR360 conventions
 nnoremap <leader>q~ :%call CapitaliseSQL()<return>
@@ -173,7 +182,9 @@ vnoremap <leader>q~ :call CapitaliseSQL()<return>
 " Open Windows exporer in file directory
 nnoremap <leader>x :!start explorer %:p:h<return>
 
-map <leader>t :NERDTreeToggle<CR>
+map <leader>t :NERDTreeToggle<return>
+
+map <F11> :WToggleFullscreen<return>
 
 "==============================================================================
 " Utilities
