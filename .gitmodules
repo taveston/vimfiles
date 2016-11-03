@@ -34,3 +34,9 @@
 [submodule "bundle/wimproved"]
 	path = bundle/wimproved
 	url = https://github.com/kkoenig/wimproved.vim
+[submodule "bundle/vim-colors-solarized"]
+	path = bundle/vim-colors-solarized
+	url = git://github.com/altercation/vim-colors-solarized.git
+[submodule "bundle/vim-polyglot"]
+	path = bundle/vim-polyglot
+	url = https://github.com/sheerun/vim-polyglot.git
