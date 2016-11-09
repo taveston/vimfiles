@@ -1,3 +1,4 @@
+"let g:pathogen_disabled = [ 'vim-signify', 'vim-airline' ]
 execute pathogen#infect()
 Helptags
 
@@ -32,12 +33,15 @@ let &colorcolumn="100"
 autocmd BufEnter *.sql let &colorcolumn="37,100"
 autocmd BufLeave *.sql let &colorcolumn="100"
 
+autocmd BufEnter *.ashx set syntax=cs
+
 "==============================================================================
 " Visuals
 "==============================================================================
 syntax on											" enable source formatting
 
-let g:gruvbox_italic = 0							" italics are sometimes glitchy
+let g:gruvbox_italic = 0							" bold/italics are sometimes glitchy, don't add
+"let g:gruvbox_bold = 0								" much value.
 colorscheme gruvbox
 
 set number											" show line numbers
@@ -70,6 +74,8 @@ if has('gui_running')
 	set guioptions-=L	  							" no left-hand scroll bar
 	set guioptions+=c	  							" no popups
 
+	set rop=type:directx
+
 	" Default right margins at 80 and 100 characters
 	"let &colorcolumn="80,".join(range(100, 999), ",")
 
@@ -83,10 +89,13 @@ else
 	let has_powerline_font = 0
 endif
 
+"set shell=Software\cmder\vendor\conemu-maximus5\conemu64.exe\ -run\ cmd.exe
+"set shellcmdflag=/c
+"set shellxquote=\"
+
 "==============================================================================
 " Plugins
 "==============================================================================
-
 " wimproved
 autocmd GUIEnter * silent! WToggleClean
 
@@ -98,24 +107,29 @@ let g:startify_change_to_dir = 1
 
 " omnisharp/syntastic
 let g:syntastic_cs_checkers = ['syntax', 'semantic'] ", 'issues']
+
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 1
+let g:syntastic_auto_loc_list = 2
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
-let g:syntastic_cpp_compiler_options = '-std=c++14' 
+
+let g:syntastic_cpp_checkers = ['clang_check']
+let g:syntastic_clang_tidy_config_file = '.syntastic_clang_check_config'
+"let g:syntastic_cpp_clang_check_args = '-extra-arg="-I."'
+"let g:syntastic_cpp_compiler_options = '-std=c++14' 
 
 autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
+"autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
 
 " Automatically add new cs files to the nearest project on save
 autocmd BufWritePost *.cs call OmniSharp#AddToProject()
 
 " show type information automatically when the cursor stops moving
-autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+"autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
 autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
 
 " signify
-let g:signify_vcs_list = [ 'git', 'svn' ]
+let g:signify_vcs_list = [ 'svn', 'git' ]
 let g:signify_sign_add = '+'
 let g:signify_sign_delete = '-'
 let g:signify_sign_change = '~'
@@ -141,22 +155,6 @@ let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#hunks#hunk_symbols = ['+', '~', '-']
 let g:airline#extensions#branch#use_vcscommand = 1
 let g:airline#extensions#branch#format = 'FormatBranchName'
-
-function! FormatBranchName(name)
-	let name = a:name
-
-	" When using the vcscommand svn plugin the name is the revision number, which is kind of useless. 
-	" Instead, try to parse the branch name out of svn info. This requires some assumptions about the 
-	" structure of the repository.
-	if exists('b:VCSCommandVCSType') && b:VCSCommandVCSType == 'SVN'
-		let fileName = bufname(VCSCommandGetOriginalBuffer(bufnr('%')))
-		let infoText = system('svn info --non-interactive -- "' . fileName . '"')
-		let match = matchlist(infoText, '\(\n\|^\)Relative URL: \^\/\(\(\(project\|branch\(es\)?\|tags?\)\/[^/$]*\|trunk\|master\)\)')
-		let name = get(match, 2, name)
-	endif
-
-	return name 
-endfunction
 
 "==============================================================================
 " Shortcuts
@@ -190,5 +188,29 @@ map <F11> :WToggleFullscreen<return>
 " Utilities
 "==============================================================================
 function! CapitaliseSQL() 
- .s/\<\w\+\>/\=synIDattr(synID(line('.'),col('.'),1),'name')=~?'sql\%(keyword\|operator\|statement\)'?toupper(submatch(0)):submatch(0)/ge
+	.s/\<\w\+\>/\=synIDattr(synID(line('.'),col('.'),1),'name')=~?'sql\%(keyword\|operator\|statement\)'?toupper(submatch(0)):submatch(0)/ge
 endfunction
+
+function! GetSvnBranchName()
+	" Try to parse the branch name out of svn info. This requires some assumptions about the 
+	" structure of the repository.
+	let fileName = bufname(VCSCommandGetOriginalBuffer(bufnr('%')))
+	let infoText = system('svn info --non-interactive -- "' . fileName . '"')
+	let match = matchlist(infoText, '\(\n\|^\)Relative URL: \^\/\(\(\(project\|branch\(es\)?\|tags?\)\/[^/$]*\|trunk\|master\)\)')
+	return get(match, 2, '')
+endfunction
+
+function! FormatBranchName(name)
+	if !exists('b:VCSCommandVCSType') || b:VCSCommandVCSType != 'SVN'
+		return a:name
+	endif
+
+	" When using the vcscommand svn plugin the branch name is the revision number, which is kind of 
+	" useless. 
+	if !exists('b:svnbranch')
+		let b:svnbranch = GetSvnBranchName()
+	endif
+
+	return b:svnbranch
+endfunction
+
