@@ -1,4 +1,5 @@
 "let g:pathogen_disabled = [ 'vim-signify', 'vim-airline' ]
+let g:pathogen_disabled = [ 'omnisharp' ]
 execute pathogen#infect()
 Helptags
 
@@ -12,7 +13,8 @@ set backupdir=$TEMP//,$TMP//,.
 set path=.,,**
 
 set autoindent
-set backspace=indent,eol,start						" allow backspacing over everything in insert mode
+set backspace=indent,eol,start						" allow backspacing over everything in insert 
+													" mode
 set history=50										" keep 50 lines of command line history
 set ruler											" show the cursor position all the time
 set incsearch										" do incremental searching
@@ -24,24 +26,37 @@ set scrolloff=5
 set gdefault										" substitute has /g by default
 set nofoldenable									" disable folding
 
+set autoread
+set autowrite
+
 " Parse g++ errors better
 set errorformat^=%-GIn\ file\ included\ from\ %f:%l:%c:,%-GIn\ file
        \\ included\ from\ %f:%l:%c\\,,%-GIn\ file\ included\ from\ %f
        \:%l:%c,%-GIn\ file\ included\ from\ %f:%l
 	
+set textwidth=100
 let &colorcolumn="100"
 autocmd BufEnter *.sql let &colorcolumn="37,100"
 autocmd BufLeave *.sql let &colorcolumn="100"
+autocmd BufNewFile,BufRead *.ashx set filetype=cs
 
-autocmd BufEnter *.ashx set syntax=cs
+autocmd BufEnter *.sql setlocal makeprg=powershell\ c:\cvs\staff\toma\tools\buildpkg.ps1\ %
+autocmd BufEnter *.sql setlocal errorformat=%-PFile:\ %f,%E%l/%c\ %#%m,%Z***%#,%+C%.%#,%-G%.%#
+
+" Auto show/hide quickfix window
+autocmd QuickFixCmdPost [^l]* nested cwindow
+autocmd QuickFixCmdPost    l* nested lwindow
+
+let g:sql_type_default = 'plsql'
 
 "==============================================================================
 " Visuals
 "==============================================================================
 syntax on											" enable source formatting
 
-let g:gruvbox_italic = 0							" bold/italics are sometimes glitchy, don't add
-"let g:gruvbox_bold = 0								" much value.
+let g:gruvbox_italic = 0							" italics cause glitches where the background 
+let g:gruvbox_bold = 1								" colour changes (ie. at colour column)
+
 colorscheme gruvbox
 
 set number											" show line numbers
@@ -52,18 +67,23 @@ set laststatus=2									" show status bar
 set noshowmode										" don't display mode (redundant with airline)
 set showcmd											" display incomplete commands
 
+autocmd GUIEnter * simalt ~x
+
 if has('gui_running')
+
 	set lines=35 columns=120
 
 	set listchars=tab:→\ ,eol:↵,trail:∙
 	set fillchars=vert:┆
 
 	" Font
-	set guifont=DejaVuSansMonoForPowerline_NF:h10.5:cANSI,Consolas:h11:cANSI
+	set guifont=DejaVuSansMonoForPowerline_NF:h10.5:cANSI
+	"set guifont=Consolas:h11:cANSI
+	"set guifont=mononoki_NF:h11:cANSI
 
 	" Doesn't seem to be a way of detecting if the fallback font is being
 	" used, and try-catch wierdly doesn't seem to work in the vimrc, just have
-	" to asume we have a powerline font for now
+	" to asume we have a powerline font 
 	let has_powerline_font = 1
 
 	" GUI options
@@ -118,15 +138,15 @@ let g:syntastic_clang_tidy_config_file = '.syntastic_clang_check_config'
 "let g:syntastic_cpp_clang_check_args = '-extra-arg="-I."'
 "let g:syntastic_cpp_compiler_options = '-std=c++14' 
 
-autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+"autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 "autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
 
 " Automatically add new cs files to the nearest project on save
-autocmd BufWritePost *.cs call OmniSharp#AddToProject()
+"autocmd BufWritePost *.cs call OmniSharp#AddToProject()
 
 " show type information automatically when the cursor stops moving
 "autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
-autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
+"autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
 
 " signify
 let g:signify_vcs_list = [ 'svn', 'git' ]
@@ -138,8 +158,8 @@ let g:signify_sign_change = '~'
 let g:ConqueTerm_CloseOnEnd = 1
 
 " devicons
-let g:webdevicons_enable = has_powerline_font
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
+"let g:webdevicons_enable = has_powerline_font
+"let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
 
 " airline
 if !exists('g:airline_symbols')
@@ -147,14 +167,29 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.maxlinenr = ''
 let g:airline_powerline_fonts = has_powerline_font
+
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_close_button = 0
-let g:airline#extensions#tabline#tab_nr_type = 2 " splits and tab number
+let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
+let g:airline#extensions#tabline#show_tab_type = 0
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_buffers = 0
+
 let g:airline#extensions#whitespace#enabled = 0
+
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#hunks#hunk_symbols = ['+', '~', '-']
+
 let g:airline#extensions#branch#use_vcscommand = 1
 let g:airline#extensions#branch#format = 'FormatBranchName'
+
+if &diff
+	let g:airline#extensions#branch#enabled = 0
+    let g:signify_disable_by_default = 0
+	set list!
+else
+	autocmd BufWritePre	*.cs retab!
+endif
 
 "==============================================================================
 " Shortcuts
@@ -178,11 +213,39 @@ nnoremap <leader>q~ :%call CapitaliseSQL()<return>
 vnoremap <leader>q~ :call CapitaliseSQL()<return>
 
 " Open Windows exporer in file directory
-nnoremap <leader>x :!start explorer %:p:h<return>
+"nnoremap <leader>x :!start explorer %:p:h<return>
+
+map <leader>r :syn sync fromstart<return>
 
 map <leader>t :NERDTreeToggle<return>
 
 map <F11> :WToggleFullscreen<return>
+
+map <leader>x :!xmllint --format --output "%" "%"<return>
+
+" Fswitch
+" Switch to the file and load it into the current window 
+nmap <silent> <Leader>of :FSHere<cr>
+" Switch to the file and load it into the window on the right 
+nmap <silent> <Leader>ol :FSRight<cr>
+" Switch to the file and load it into a new window split on the right 
+nmap <silent> <Leader>oL :FSSplitRight<cr>
+" Switch to the file and load it into the window on the left 
+nmap <silent> <Leader>oh :FSLeft<cr>
+" Switch to the file and load it into a new window split on the left 
+nmap <silent> <Leader>oH :FSSplitLeft<cr>
+" Switch to the file and load it into the window above 
+nmap <silent> <Leader>ok :FSAbove<cr>
+" Switch to the file and load it into a new window split above 
+nmap <silent> <Leader>oK :FSSplitAbove<cr>
+" Switch to the file and load it into the window below 
+nmap <silent> <Leader>oj :FSBelow<cr>
+" Switch to the file and load it into a new window split below 
+nmap <silent> <Leader>oJ :FSSplitBelow<cr>
+
+" Paste and yank
+nmap <silent> <Leader>p p`[v`]y
+vmap <silent> <Leader>p p`[v`]y
 
 "==============================================================================
 " Utilities
@@ -192,12 +255,29 @@ function! CapitaliseSQL()
 endfunction
 
 function! GetSvnBranchName()
-	" Try to parse the branch name out of svn info. This requires some assumptions about the 
-	" structure of the repository.
-	let fileName = bufname(VCSCommandGetOriginalBuffer(bufnr('%')))
-	let infoText = system('svn info --non-interactive -- "' . fileName . '"')
-	let match = matchlist(infoText, '\(\n\|^\)Relative URL: \^\/\(\(\(project\|branch\(es\)?\|tags?\)\/[^/$]*\|trunk\|master\)\)')
-	return get(match, 2, '')
+	function! GetSvnBranchNameJobFinished(channel)
+		let infoText = ""
+		while ch_status(a:channel, {'part': 'out'}) == 'buffered'
+			let infoText = infoText . ch_read(a:channel) 
+		endwhile
+
+		" Try to parse the branch name out of svn info. This requires some assumptions about the 
+		" structure of the repository.
+		let pattern = '\(\n\|^\)Relative URL: \^\/\(\(\(project\|branch\(es\)?\|tags?\)\/[^/$]*\|trunk\|master\)\)'
+		let match = matchlist(infoText, pattern)
+		let b:svnBranchName = get(match, 2, '')
+		AirlineRefresh
+	endfunction
+
+	if !exists('b:svnBranchName')
+		let fileName = bufname(VCSCommandGetOriginalBuffer(bufnr('%')))
+		let command = 'svn info --non-interactive -- "' . fileName . '"'
+		let job = job_start(command, { 'close_cb': 'GetSvnBranchNameJobFinished', 'out_mode': 'raw' })
+
+		let b:svnBranchName = ''
+	endif
+
+	return b:svnBranchName
 endfunction
 
 function! FormatBranchName(name)
@@ -207,10 +287,15 @@ function! FormatBranchName(name)
 
 	" When using the vcscommand svn plugin the branch name is the revision number, which is kind of 
 	" useless. 
-	if !exists('b:svnbranch')
-		let b:svnbranch = GetSvnBranchName()
-	endif
-
-	return b:svnbranch
+	return GetSvnBranchName()
 endfunction
 
+function! ToCamelCase()
+	.s/\v_(\w)/\u\1/e
+	.s/\v(\W|^)(\w)/\1\u\2/e
+endfunction
+
+function! ToSnakeCase()
+	.s/\v([a-z])([A-Z])/\1_\l\2/e
+	.s/\v(\W|^)([A-Z])/\1\l\2/e
+endfunction

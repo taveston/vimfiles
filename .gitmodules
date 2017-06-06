@@ -40,3 +40,21 @@
 [submodule "bundle/vim-polyglot"]
 	path = bundle/vim-polyglot
 	url = https://github.com/sheerun/vim-polyglot.git
+[submodule "bundle/protodef"]
+	path = bundle/protodef
+	url = https://github.com/derekwyatt/vim-protodef
+[submodule "fswitch"]
+	path = fswitch
+	url = https://github.com/derekwyatt/vim-fswitch
+[submodule "bundle/fswitch"]
+	path = bundle/fswitch
+	url = https://github.com/derekwyatt/vim-fswitch
+[submodule "bundle/solarized8"]
+	path = bundle/solarized8
+	url = https://github.com/lifepillar/vim-solarized8.git
+[submodule "bundle/desertink"]
+	path = bundle/desertink
+	url = https://github.com/toupeira/vim-desertink.git
+[submodule "bundle/desertEx"]
+	path = bundle/desertEx
+	url = https://github.com/vim-scripts/desertEx.git
