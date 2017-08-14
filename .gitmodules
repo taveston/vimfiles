@@ -22,9 +22,6 @@
 [submodule "bundle/vim-dispatch"]
 	path = bundle/vim-dispatch
 	url = git://github.com/tpope/vim-dispatch.git
-[submodule "bundle/syntastic"]
-	path = bundle/syntastic
-	url = https://github.com/scrooloose/syntastic.git
 [submodule "bundle/devicons"]
 	path = bundle/devicons
 	url = https://github.com/ryanoasis/vim-devicons.git
@@ -58,3 +55,12 @@
 [submodule "bundle/desertEx"]
 	path = bundle/desertEx
 	url = https://github.com/vim-scripts/desertEx.git
+[submodule "bundle/unicode"]
+	path = bundle/unicode
+	url = https://github.com/chrisbra/unicode.vim
+[submodule "bundle/typescript-vim"]
+	path = bundle/typescript-vim
+	url = https://github.com/leafgarland/typescript-vim.git
+[submodule "bundle\\tslint"]
+	path = bundle\\tslint
+	url = https://github.com/palantir/tslint
