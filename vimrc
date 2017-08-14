@@ -135,6 +135,10 @@ let g:syntastic_check_on_wq = 0
 
 let g:syntastic_cpp_checkers = ['clang_check']
 let g:syntastic_clang_tidy_config_file = '.syntastic_clang_check_config'
+
+let g:syntastic_typescript_checkers = ['tslint', 'tsc']
+let g:syntastic_typescript_tslint_args = '-c c:\cvs\fproot\node\config\tslint.dev.json'
+
 "let g:syntastic_cpp_clang_check_args = '-extra-arg="-I."'
 "let g:syntastic_cpp_compiler_options = '-std=c++14' 
 
@@ -190,6 +194,9 @@ if &diff
 else
 	autocmd BufWritePre	*.cs retab!
 endif
+
+" unicode.vim
+nmap ga <Plug>(UnicodeGA)
 
 "==============================================================================
 " Shortcuts
