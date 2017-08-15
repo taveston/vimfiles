@@ -136,8 +136,12 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_cpp_checkers = ['clang_check']
 let g:syntastic_clang_tidy_config_file = '.syntastic_clang_check_config'
 
-let g:syntastic_typescript_checkers = ['tslint', 'tsc']
+let g:syntastic_typescript_checkers = ['tslint']
 let g:syntastic_typescript_tslint_args = '-c c:\cvs\fproot\node\config\tslint.dev.json'
+
+let g:ycm_always_populate_location_list = 1
+let g:ycm_open_loclist_on_ycm_diags = 1
+let g:ycm_confirm_extra_conf = 0
 
 "let g:syntastic_cpp_clang_check_args = '-extra-arg="-I."'
 "let g:syntastic_cpp_compiler_options = '-std=c++14' 
@@ -249,6 +253,10 @@ nmap <silent> <Leader>oK :FSSplitAbove<cr>
 nmap <silent> <Leader>oj :FSBelow<cr>
 " Switch to the file and load it into a new window split below 
 nmap <silent> <Leader>oJ :FSSplitBelow<cr>
+
+" YCM
+autocmd FileType c,cpp,objc,objcpp,cs,go,javascript,python nmap <buffer> <leader>gt :YcmCompleter GoTo<cr>
+autocmd FileType typescript nmap <buffer> <leader>gt :YcmCompleter GoToDefinition<cr>
 
 " Paste and yank
 nmap <silent> <Leader>p p`[v`]y
