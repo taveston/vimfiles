@@ -228,11 +228,18 @@ vnoremap <leader>q~ :call CapitaliseSQL()<return>
 
 map <leader>r :syn sync fromstart<return>
 
-map <leader>t :NERDTreeToggle<return>
+map <leader>tt :NERDTreeToggle<return>
+map <leader>tf :NERDTreeFind<return>
 
 map <F11> :WToggleFullscreen<return>
+map <leader>tt :NERDTreeToggle<return>
+map <leader>tf :NERDTreeFind<return>
 
 map <leader>x :!xmllint --format --output "%" "%"<return>
+
+" Startify
+nmap <leader>ss :SSave
+nmap <leader>sc :SClose
 
 " Fswitch
 " Switch to the file and load it into the current window 
@@ -255,8 +262,17 @@ nmap <silent> <Leader>oj :FSBelow<cr>
 nmap <silent> <Leader>oJ :FSSplitBelow<cr>
 
 " YCM
-autocmd FileType c,cpp,objc,objcpp,cs,go,javascript,python nmap <buffer> <leader>gt :YcmCompleter GoTo<cr>
+" F12, -gt = GoTo
+nmap <leader>gt :YcmCompleter GoTo<cr>
+nmap <F12> :YcmCompleter GoTo<cr>
+
+nmap <leader>gf :YcmCompleter GoToDefinition<cr>
+nmap <leader>gc :YcmCompleter GoToDeclaration<cr>
+nmap <leader>gd :YcmCompleter GetDoc<cr>
+
+" For typescript GoTo = GoToDefinition
 autocmd FileType typescript nmap <buffer> <leader>gt :YcmCompleter GoToDefinition<cr>
+autocmd FileType typescript nmap <buffer> <F12> :YcmCompleter GoToDefinition<cr>
 
 " Paste and yank
 nmap <silent> <Leader>p p`[v`]y
