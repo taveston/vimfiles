@@ -61,14 +61,14 @@
 [submodule "bundle/typescript-vim"]
 	path = bundle/typescript-vim
 	url = https://github.com/leafgarland/typescript-vim.git
-[submodule "bundle\\tslint"]
-	path = bundle\\tslint
+[submodule "bundle/tslint"]
+	path = bundle/tslint
 	url = https://github.com/palantir/tslint
 [submodule "bundle/syntastic"]
 	path = bundle/syntastic
 	url = https://github.com/vim-syntastic/syntastic.git
-[submodule "bundle\\youcompleteme"]
-	path = bundle\\youcompleteme
+[submodule "bundle/youcompleteme"]
+	path = bundle/youcompleteme
 	url = https://github.com/valloric/youcompleteme
 [submodule "bundle\\vim-better-whitespace"]
 	path = bundle\\vim-better-whitespace
