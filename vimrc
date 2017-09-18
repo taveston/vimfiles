@@ -58,6 +58,7 @@ let g:gruvbox_italic = 0							" italics cause glitches where the background
 let g:gruvbox_bold = 1								" colour changes (ie. at colour column)
 
 colorscheme gruvbox
+set background=dark
 
 set number											" show line numbers
 set relativenumber									" line numbers are relative 
@@ -67,8 +68,6 @@ set laststatus=2									" show status bar
 set noshowmode										" don't display mode (redundant with airline)
 set showcmd											" display incomplete commands
 
-autocmd GUIEnter * simalt ~x
-
 if has('gui_running')
 
 	set lines=35 columns=120
@@ -77,9 +76,15 @@ if has('gui_running')
 	set fillchars=vert:┆
 
 	" Font
-	set guifont=DejaVuSansMonoForPowerline_NF:h10.5:cANSI
-	"set guifont=Consolas:h11:cANSI
-	"set guifont=mononoki_NF:h11:cANSI
+	if has("gui_win32")
+		set guifont=DejaVuSansMonoForPowerline_NF:h10.5:cANSI
+		"set guifont=Consolas:h11:cANSk
+		"set guifont=mononoki_NF:h11:cANSI
+		set rop=type:directx
+		autocmd GUIEnter * simalt ~x
+	else
+		set guifont=DejaVuSansMono\ Nerd\ Font\ Mono\ 10
+	end
 
 	" Doesn't seem to be a way of detecting if the fallback font is being
 	" used, and try-catch wierdly doesn't seem to work in the vimrc, just have
@@ -94,8 +99,6 @@ if has('gui_running')
 	set guioptions-=L	  							" no left-hand scroll bar
 	set guioptions+=c	  							" no popups
 
-	set rop=type:directx
-
 	" Default right margins at 80 and 100 characters
 	"let &colorcolumn="80,".join(range(100, 999), ",")
 
@@ -104,7 +107,7 @@ if has('gui_running')
 	" autocmd BufLeave *.sql let &colorcolumn="80,".join(range(100, 999), ",")
 else
 	set listchars=tab:>\ ,eol:$
-	set fillchars=vert:|
+	set fillchars=vert:\|
 
 	let has_powerline_font = 0
 endif
@@ -230,7 +233,9 @@ map <leader>r :syn sync fromstart<return>
 
 map <leader>t :NERDTreeToggle<return>
 
-map <F11> :WToggleFullscreen<return>
+if has("gui_win32")
+	map <F11> :WToggleFullscreen<return>
+endif
 
 map <leader>x :!xmllint --format --output "%" "%"<return>
 
