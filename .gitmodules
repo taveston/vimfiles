@@ -73,3 +73,12 @@
 [submodule "bundle\\vim-better-whitespace"]
 	path = bundle/vim-better-whitespace
 	url = git://github.com/ntpeters/vim-better-whitespace.git
+[submodule "bundle\\vim-fontsize"]
+	path = bundle\\vim-fontsize
+	url = https://github.com/drmikehenry/vim-fontsize
+[submodule "bundle\\vim-fontzoom"]
+	path = bundle\\vim-fontzoom
+	url = https://github.com/thinca/vim-fontzoom
+[submodule "bundle\\ctrlpvim.vim"]
+	path = bundle\\ctrlpvim.vim
+	url = https://github.com/ctrlpvim/ctrlp.vim
