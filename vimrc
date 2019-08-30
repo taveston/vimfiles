@@ -1,6 +1,6 @@
 "let g:pathogen_disabled = [ 'vim-signify', 'vim-airline' ]
-let g:pathogen_disabled = [ 'omnisharp' ]
-execute pathogen#infect()
+let g:pathogen_disabled = [ 'omnisharp', 'devicons', 'vim-fontzoom' ]
+call pathogen#infect()
 Helptags
 
 "==============================================================================
@@ -19,12 +19,14 @@ set history=50										" keep 50 lines of command line history
 set ruler											" show the cursor position all the time
 set incsearch										" do incremental searching
 set backup											" keep a backup file
-set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 set encoding=utf-8
 set grepprg=grep\ -nH								" asume grep exists
 set scrolloff=5
 set gdefault										" substitute has /g by default
 set nofoldenable									" disable folding
+set display+=lastline
+set formatoptions+=j								" Remove comment leader when joining lines
 
 set autoread
 set autowrite
@@ -33,11 +35,11 @@ set autowrite
 set errorformat^=%-GIn\ file\ included\ from\ %f:%l:%c:,%-GIn\ file
        \\ included\ from\ %f:%l:%c\\,,%-GIn\ file\ included\ from\ %f
        \:%l:%c,%-GIn\ file\ included\ from\ %f:%l
-	
+
 set textwidth=100
 let &colorcolumn="100"
-autocmd BufEnter *.sql let &colorcolumn="37,100"
-autocmd BufLeave *.sql let &colorcolumn="100"
+autocmd BufEnter *.sql let &colorcolumn="37,101"
+autocmd BufLeave *.sql let &colorcolumn="101"
 autocmd BufNewFile,BufRead *.ashx set filetype=cs
 
 autocmd BufEnter *.sql setlocal makeprg=powershell\ c:\cvs\staff\toma\tools\buildpkg.ps1\ %
@@ -69,18 +71,29 @@ set noshowmode										" don't display mode (redundant with airline)
 set showcmd											" display incomplete commands
 
 if has('gui_running')
-
 	set lines=35 columns=120
 
-	set listchars=tab:→\ ,eol:↵,trail:∙
-	set fillchars=vert:┆
+	set listchars=tab:→\ ,eol:$,trail:∙,nbsp:_
+
+	" works from the console but not in vimrc
+	set fillchars=vert:\┃
 
 	" Font
 	if has("gui_win32")
-		set guifont=DejaVuSansMonoForPowerline_NF:h10.5:cANSI
+		set guifont=Powerline_Consolas:h11:cANSI
+		"set guifont=DejaVuSansMonoForPowerline_NF:h10.5:cANSI
 		"set guifont=Consolas:h11:cANSk
 		"set guifont=mononoki_NF:h11:cANSI
-		set rop=type:directx
+
+		" doesn't work well with :WToggleFullscreen
+		"set rop=type:directx
+
+		autocmd GUIEnter * WSetAlpha 251
+
+		" Go fullscreen
+		" autocmd GUIEnter * WToggleFullscreen
+
+		" Maximise
 		autocmd GUIEnter * simalt ~x
 	else
 		set guifont=DejaVuSansMono\ Nerd\ Font\ Mono\ 10
@@ -99,9 +112,6 @@ if has('gui_running')
 	set guioptions-=L	  							" no left-hand scroll bar
 	set guioptions+=c	  							" no popups
 
-	" Default right margins at 80 and 100 characters
-	"let &colorcolumn="80,".join(range(100, 999), ",")
-
 	" Extra guidelines for SQL files
 	" autocmd BufEnter *.sql let &colorcolumn="37,80,".join(range(100, 999), ",")
 	" autocmd BufLeave *.sql let &colorcolumn="80,".join(range(100, 999), ",")
@@ -111,10 +121,6 @@ else
 
 	let has_powerline_font = 0
 endif
-
-"set shell=Software\cmder\vendor\conemu-maximus5\conemu64.exe\ -run\ cmd.exe
-"set shellcmdflag=/c
-"set shellxquote=\"
 
 "==============================================================================
 " Plugins
@@ -172,6 +178,10 @@ let g:ConqueTerm_CloseOnEnd = 1
 "let g:webdevicons_enable = has_powerline_font
 "let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
 
+let NERDTreeQuitOnOpen=1
+let NERDTreeWinPos="right"
+let NERDTreeAutoDeleteBuffer=1
+
 " airline
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
@@ -191,7 +201,7 @@ let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#hunks#hunk_symbols = ['+', '~', '-']
 
-let g:airline#extensions#branch#use_vcscommand = 1
+"let g:airline#extensions#branch#use_vcscommand = 1
 let g:airline#extensions#branch#format = 'FormatBranchName'
 
 if &diff
@@ -245,23 +255,23 @@ nmap <leader>ss :SSave
 nmap <leader>sc :SClose
 
 " Fswitch
-" Switch to the file and load it into the current window 
+" Switch to the file and load it into the current window
 nmap <silent> <Leader>of :FSHere<cr>
-" Switch to the file and load it into the window on the right 
+" Switch to the file and load it into the window on the right
 nmap <silent> <Leader>ol :FSRight<cr>
-" Switch to the file and load it into a new window split on the right 
+" Switch to the file and load it into a new window split on the right
 nmap <silent> <Leader>oL :FSSplitRight<cr>
-" Switch to the file and load it into the window on the left 
+" Switch to the file and load it into the window on the left
 nmap <silent> <Leader>oh :FSLeft<cr>
-" Switch to the file and load it into a new window split on the left 
+" Switch to the file and load it into a new window split on the left
 nmap <silent> <Leader>oH :FSSplitLeft<cr>
-" Switch to the file and load it into the window above 
+" Switch to the file and load it into the window above
 nmap <silent> <Leader>ok :FSAbove<cr>
-" Switch to the file and load it into a new window split above 
+" Switch to the file and load it into a new window split above
 nmap <silent> <Leader>oK :FSSplitAbove<cr>
-" Switch to the file and load it into the window below 
+" Switch to the file and load it into the window below
 nmap <silent> <Leader>oj :FSBelow<cr>
-" Switch to the file and load it into a new window split below 
+" Switch to the file and load it into a new window split below
 nmap <silent> <Leader>oJ :FSSplitBelow<cr>
 
 " YCM
@@ -272,6 +282,7 @@ nmap <F12> :YcmCompleter GoTo<cr>
 nmap <leader>gf :YcmCompleter GoToDefinition<cr>
 nmap <leader>gc :YcmCompleter GoToDeclaration<cr>
 nmap <leader>gd :YcmCompleter GetDoc<cr>
+nmap <leader>gx :YcmCompleter FixIt<cr>
 
 " For typescript GoTo = GoToDefinition
 autocmd FileType typescript nmap <buffer> <leader>gt :YcmCompleter GoToDefinition<cr>
@@ -284,7 +295,7 @@ vmap <silent> <Leader>p p`[v`]y
 "==============================================================================
 " Utilities
 "==============================================================================
-function! CapitaliseSQL() 
+function! CapitaliseSQL()
 	.s/\<\w\+\>/\=synIDattr(synID(line('.'),col('.'),1),'name')=~?'sql\%(keyword\|operator\|statement\)'?toupper(submatch(0)):submatch(0)/ge
 endfunction
 
@@ -292,10 +303,10 @@ function! GetSvnBranchName()
 	function! GetSvnBranchNameJobFinished(channel)
 		let infoText = ""
 		while ch_status(a:channel, {'part': 'out'}) == 'buffered'
-			let infoText = infoText . ch_read(a:channel) 
+			let infoText = infoText . ch_read(a:channel)
 		endwhile
 
-		" Try to parse the branch name out of svn info. This requires some assumptions about the 
+		" Try to parse the branch name out of svn info. This requires some assumptions about the
 		" structure of the repository.
 		let pattern = '\(\n\|^\)Relative URL: \^\/\(\(\(project\|branch\(es\)?\|tags?\)\/[^/$]*\|trunk\|master\)\)'
 		let match = matchlist(infoText, pattern)
@@ -319,8 +330,8 @@ function! FormatBranchName(name)
 		return a:name
 	endif
 
-	" When using the vcscommand svn plugin the branch name is the revision number, which is kind of 
-	" useless. 
+	" When using the vcscommand svn plugin the branch name is the revision number, which is kind of
+	" useless.
 	return GetSvnBranchName()
 endfunction
 
