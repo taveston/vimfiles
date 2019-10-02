@@ -26,6 +26,8 @@ set scrolloff=5
 set gdefault										" substitute has /g by default
 set nofoldenable									" disable folding
 
+set spellsuggest=best,5								" show best 5 spelling suggestions only
+
 set autoread
 set autowrite
 
@@ -33,7 +35,7 @@ set autowrite
 set errorformat^=%-GIn\ file\ included\ from\ %f:%l:%c:,%-GIn\ file
        \\ included\ from\ %f:%l:%c\\,,%-GIn\ file\ included\ from\ %f
        \:%l:%c,%-GIn\ file\ included\ from\ %f:%l
-	
+
 set textwidth=100
 let &colorcolumn="100"
 autocmd BufEnter *.sql let &colorcolumn="37,100"
@@ -77,8 +79,8 @@ if has('gui_running')
 
 	" Font
 	if has("gui_win32")
-		set guifont=DejaVuSansMonoForPowerline_NF:h10.5:cANSI
-		"set guifont=Consolas:h11:cANSk
+		set guifont=DejaVuSansMonoForPowerline_NF:h10:cANSI
+		"set guifont=Consolas:h11:cANSI
 		"set guifont=mononoki_NF:h11:cANSI
 		set rop=type:directx
 		autocmd GUIEnter * simalt ~x
@@ -88,7 +90,7 @@ if has('gui_running')
 
 	" Doesn't seem to be a way of detecting if the fallback font is being
 	" used, and try-catch wierdly doesn't seem to work in the vimrc, just have
-	" to asume we have a powerline font 
+	" to asume we have a powerline font
 	let has_powerline_font = 1
 
 	" GUI options
@@ -123,7 +125,7 @@ endif
 autocmd GUIEnter * silent! WToggleClean
 
 " startify
-let g:startify_bookmarks = [ '\cvs', '\cvs\csr\db', '~\vimfiles\vimrc', '~\documents\repos' ]
+let g:startify_bookmarks = [ 'c:\oracle12cdb\product\12.2.0\db1\network\admin\tnsnames.ora', 'c:\windows\System32\drivers\etc\hosts' ]
 let g:startify_custom_header = []
 let g:startify_relative_path = 1
 let g:startify_change_to_dir = 1
@@ -147,7 +149,7 @@ let g:ycm_open_loclist_on_ycm_diags = 1
 let g:ycm_confirm_extra_conf = 0
 
 "let g:syntastic_cpp_clang_check_args = '-extra-arg="-I."'
-"let g:syntastic_cpp_compiler_options = '-std=c++14' 
+"let g:syntastic_cpp_compiler_options = '-std=c++14'
 
 "autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 "autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
@@ -201,6 +203,10 @@ if &diff
 else
 	autocmd BufWritePre	*.cs retab!
 endif
+
+" nerd tree
+let NERDTreeQuitOnOpen=3
+let NERDTreeAutoDeleteBuffer=1
 
 " unicode.vim
 nmap ga <Plug>(UnicodeGA)
@@ -272,6 +278,7 @@ nmap <F12> :YcmCompleter GoTo<cr>
 nmap <leader>gf :YcmCompleter GoToDefinition<cr>
 nmap <leader>gc :YcmCompleter GoToDeclaration<cr>
 nmap <leader>gd :YcmCompleter GetDoc<cr>
+nmap <leader>gx :YcmCompleter FixIt<cr>
 
 " For typescript GoTo = GoToDefinition
 autocmd FileType typescript nmap <buffer> <leader>gt :YcmCompleter GoToDefinition<cr>
