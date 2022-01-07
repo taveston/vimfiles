@@ -82,3 +82,6 @@
 [submodule "bundle/ctrlpvim.vim"]
 	path = bundle/ctrlpvim.vim
 	url = https://github.com/ctrlpvim/ctrlp.vim
+[submodule "bundle/AdvancedSorters"]
+	path = bundle/AdvancedSorters
+	url = https://github.com/vim-scripts/AdvancedSorters
