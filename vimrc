@@ -13,13 +13,13 @@ set backupdir=$TEMP//,$TMP//,.
 set path=.,,**
 
 set autoindent
-set backspace=indent,eol,start						" allow backspacing over everything in insert 
+set backspace=indent,eol,start						" allow backspacing over everything in insert
 													" mode
 set history=50										" keep 50 lines of command line history
 set ruler											" show the cursor position all the time
 set incsearch										" do incremental searching
 set backup											" keep a backup file
-set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 set encoding=utf-8
 set grepprg=grep\ -nH								" asume grep exists
 set scrolloff=5
@@ -33,13 +33,15 @@ set spellsuggest=best,5								" show best 5 spelling suggestions only
 set autoread
 set autowrite
 
+set belloff=all
+
 " Parse g++ errors better
 set errorformat^=%-GIn\ file\ included\ from\ %f:%l:%c:,%-GIn\ file
        \\ included\ from\ %f:%l:%c\\,,%-GIn\ file\ included\ from\ %f
        \:%l:%c,%-GIn\ file\ included\ from\ %f:%l
 
 set textwidth=100
-let &colorcolumn="100"
+let &colorcolumn="101"
 autocmd BufEnter *.sql let &colorcolumn="37,101"
 autocmd BufLeave *.sql let &colorcolumn="101"
 autocmd BufNewFile,BufRead *.ashx set filetype=cs
@@ -58,7 +60,7 @@ let g:sql_type_default = 'plsql'
 "==============================================================================
 syntax on											" enable source formatting
 
-let g:gruvbox_italic = 0							" italics cause glitches where the background 
+let g:gruvbox_italic = 1							" italics cause glitches where the background
 let g:gruvbox_bold = 1								" colour changes (ie. at colour column)
 
 colorscheme gruvbox
@@ -82,16 +84,16 @@ if has('gui_running')
 
 	" Font
 	if has("gui_win32")
-		set guifont=DejaVuSansMonoForPowerline_NF:h10:cANSI
+		set guifont=Cascadia_Code_PL:h11:W350:cANSI
+		"set guifont=DejaVuSansMonoForPowerline_NF:h10:cANSI
 		"set guifont=Powerline_Consolas:h11:cANSI
-		"set guifont=DejaVuSansMonoForPowerline_NF:h10.5:cANSI
 		"set guifont=Consolas:h11:cANSk
 		"set guifont=mononoki_NF:h11:cANSI
 
 		" doesn't work well with :WToggleFullscreen
-		"set rop=type:directx
+		set rop=type:directx
 
-		autocmd GUIEnter * WSetAlpha 251
+		" autocmd GUIEnter * WSetAlpha 251
 
 		" Go fullscreen
 		" autocmd GUIEnter * WToggleFullscreen
@@ -255,7 +257,7 @@ if has("gui_win32")
 	map <F11> :WToggleFullscreen<return>
 endif
 
-map <leader>x :!xmllint --format --output "%" "%"<return>
+map <leader>xml :!xmllint --format --output "%" "%"<return>
 
 " Startify
 nmap <leader>ss :SSave
@@ -290,6 +292,8 @@ nmap <leader>gf :YcmCompleter GoToDefinition<cr>
 nmap <leader>gc :YcmCompleter GoToDeclaration<cr>
 nmap <leader>gd :YcmCompleter GetDoc<cr>
 nmap <leader>gx :YcmCompleter FixIt<cr>
+nmap <leader>go :YcmCompleter OrganizeImports<cr>
+nmap <leader>gr :YcmCompleter Format<cr>
 
 " For typescript GoTo = GoToDefinition
 autocmd FileType typescript nmap <buffer> <leader>gt :YcmCompleter GoToDefinition<cr>

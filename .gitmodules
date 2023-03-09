@@ -85,3 +85,6 @@
 [submodule "bundle/AdvancedSorters"]
 	path = bundle/AdvancedSorters
 	url = https://github.com/vim-scripts/AdvancedSorters
+[submodule ".\\bundle\\wandbox-vim"]
+	path = .\\bundle\\wandbox-vim
+	url = https://github.com/rhysd/wandbox-vim.git
