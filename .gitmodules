@@ -1,6 +1,6 @@
 [submodule "bundle/vim-csharp"]
 	path = bundle/vim-csharp
-	url = git://github.com/OrangeT/vim-csharp.git
+	url = https://github.com/OrangeT/vim-csharp.git
 [submodule "bundle/nerdtree"]
 	path = bundle/nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
@@ -21,7 +21,7 @@
 	url = https://github.com/OmniSharp/omnisharp-vim.git
 [submodule "bundle/vim-dispatch"]
 	path = bundle/vim-dispatch
-	url = git://github.com/tpope/vim-dispatch.git
+	url = https://github.com/tpope/vim-dispatch.git
 [submodule "bundle/devicons"]
 	path = bundle/devicons
 	url = https://github.com/ryanoasis/vim-devicons.git
@@ -33,7 +33,7 @@
 	url = https://github.com/kkoenig/wimproved.vim
 [submodule "bundle/vim-colors-solarized"]
 	path = bundle/vim-colors-solarized
-	url = git://github.com/altercation/vim-colors-solarized.git
+	url = https://github.com/altercation/vim-colors-solarized.git
 [submodule "bundle/vim-polyglot"]
 	path = bundle/vim-polyglot
 	url = https://github.com/sheerun/vim-polyglot.git
@@ -72,7 +72,7 @@
 	url = https://github.com/valloric/youcompleteme
 [submodule "bundle/vim-better-whitespace"]
 	path = bundle/vim-better-whitespace
-	url = git://github.com/ntpeters/vim-better-whitespace.git
+	url = https://github.com/ntpeters/vim-better-whitespace.git
 [submodule "bundle/vim-fontsize"]
 	path = bundle/vim-fontsize
 	url = https://github.com/drmikehenry/vim-fontsize
