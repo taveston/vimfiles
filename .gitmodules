@@ -88,3 +88,6 @@
 [submodule ".\\bundle\\wandbox-vim"]
 	path = .\\bundle\\wandbox-vim
 	url = https://github.com/rhysd/wandbox-vim.git
+[submodule "bundle/copilot.vim"]
+	path = bundle/copilot.vim
+	url = https://github.com/github/copilot.vim.git
